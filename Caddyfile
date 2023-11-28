@@ -1,0 +1,5 @@
+:80 {
+	reverse_proxy uwsgi:3000 {
+		transport uwsgi
+	}
+}

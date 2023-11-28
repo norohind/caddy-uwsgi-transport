@@ -1,0 +1,22 @@
+services:
+  caddy:
+    build:
+      dockerfile_inline: |
+        FROM docker.io/caddy:2.7.5-builder-alpine AS builder
+        RUN xcaddy build --with github.com/wxh06/caddy-uwsgi-transport
+        FROM docker.io/caddy:2.7.5-alpine
+        COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+        COPY Caddyfile /etc/caddy/Caddyfile
+
+    ports:
+      - "8888:80"
+
+  uwsgi:
+    build:
+      dockerfile_inline: |
+        FROM docker.io/python:3.11-slim
+        RUN apt update && apt install -y --no-install-recommends gcc libc6-dev && pip install uwsgi
+        COPY hello.py /hello.py
+        COPY uwsgi.ini /uwsgi.ini
+        # CMD ["/usr/local/bin/uwsgi", "--socket", ":3000", "--wsgi-file", "/hello.py"]  # That way it works
+        CMD ["/usr/local/bin/uwsgi", "-c", "/uwsgi.ini"]  # That way it doesn't works
