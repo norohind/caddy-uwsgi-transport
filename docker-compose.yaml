@@ -19,4 +19,4 @@ services:
         COPY hello.py /hello.py
         COPY uwsgi.ini /uwsgi.ini
         # CMD ["/usr/local/bin/uwsgi", "--socket", ":3000", "--wsgi-file", "/hello.py"]  # That way it works
-        CMD ["/usr/local/bin/uwsgi", "-c", "/uwsgi.ini"]  # That way it doesn't works
+        CMD ["/usr/local/bin/uwsgi", "/uwsgi.ini"]  # That way it works too
